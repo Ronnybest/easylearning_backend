@@ -74,6 +74,7 @@ class UserController extends Controller
                     'status' => true,
                     'message' => 'User Created Successfully',
                     'data' => $userInfo
+                    
                 ], 200);
             }
             //user previously logged in
