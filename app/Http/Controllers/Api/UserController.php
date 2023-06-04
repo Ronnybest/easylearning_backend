@@ -19,17 +19,22 @@ class UserController extends Controller
      */
     public function createUser(Request $request)
     {
+
+        // return response()->json([
+        //     'status'=>true,
+        //     'data'=>'mydata',
+        //     'message'=>'new msg',
+        // ], 200);
         try {
             //Validated
             $validateUser = Validator::make($request->all(), 
             [
-                'avatar' => 'required',
+                //'avatar' => 'required',
                 'type' => 'required',
                 'open_id' => 'required',
                 'name' => 'required',
                 'email' => 'required',
-                'password' => 'required|min:6',
-                //'password' => 'required'
+                //'password' => 'required|min:6',
             ]);
 
             if($validateUser->fails()){
@@ -47,7 +52,11 @@ class UserController extends Controller
             $map['type'] = $validated['type'];
             $map['open_id'] = $validated['open_id'];
             $user = User::where($map)->first();
-
+            return response()->json([
+                'status'=>true,
+                'data'=>'mydata',
+                'message'=>'new msg',
+            ], 200);
             //whether user has already logged or not
             //empty means doesnt exist then save user in the db for first time
             if(empty($user->id)){
@@ -58,7 +67,7 @@ class UserController extends Controller
                 //user first time created
                 $validated['created_at']= Carbon::now();
                 //encrypt pass
-                $validated['password']=Hash::make($validated['password']);
+                //$validated['password']=Hash::make($validated['password']);
                 //returns the id of the row after saving
                 $userID = User::insertGetId($validated);
                 //user's all information
