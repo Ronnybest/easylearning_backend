@@ -15,22 +15,68 @@ use Encore\Admin\Tree;
 class CourseController extends AdminController
 {
 
-    protected function grid() {
+    /**
+     * Title for current resource.
+     *
+     * @var string
+     */
+    protected $title = 'Course';
+
+    /**
+     * Make a grid builder.
+     *
+     * @return Grid
+     */
+    protected function grid()
+    {
         $grid = new Grid(new Course());
+
+        $grid->column('id', __('Id'));
+        $grid->column('user_token', __('Teacher'))->display(
+            function($token) {
+                // for further processing data you can create
+                // any method iside it or do operation
+                return User::where('token', '=', $token)
+                ->value('name');
+            }
+        );
+        $grid->column('course_name', __('Course name'));
+        $grid->column('thumbnail', __('Thumbnail'))->image('', 50,50);
+        $grid->column('description', __('Description'));
+        $grid->column('type_id', __('Type id'));
+        $grid->column('price', __('Price'));
+        $grid->column('lesson_num', __('Lesson num'));
+        $grid->column('video_lenght', __('Video lenght'));
+        $grid->column('created_at', __('Created at'));
+
         return $grid;
     }
+
+    /**
+     * Make a show builder.
+     *
+     * @param mixed $id
+     * @return Show
+     */
     protected function detail($id)
     {
         $show = new Show(Course::findOrFail($id));
-
+        // the first argument is the database field
         $show->field('id', __('Id'));
-        $show->field('title', __('Category'));
+        $show->field('user_token', __('Teacher'));
+        $show->field('course_name', __('Course name'));
+        $show->field('thumbnail', __('Thumbnail'));
+        $show->field('video', __('Video'));
         $show->field('description', __('Description'));
-        $show->field('order', __('Order'));
-        $show->field('likes', __('Likes'));
-        $show->field('dislikes', __('Dislikes'));
+        $show->field('type_id', __('Type id'));
+        $show->field('price', __('Price'));
+        $show->field('lesson_num', __('Lesson num'));
+        $show->field('video_lenght', __('Video lenght'));
+        $show->field('follow', __('Follow'));
+        $show->field('score', __('Score'));
         $show->field('created_at', __('Created at'));
-        $show->column('updated_at', __('Updated at'));
+        $show->field('updated_at', __('Updated at'));
+
         return $show;
     }
 
